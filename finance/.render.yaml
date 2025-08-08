@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: finance-app
+    name: finance-tracker
     env: python
-    buildCommand: "cd finance && pip install -r requirements.txt"
-    startCommand: "cd finance && gunicorn finance.wsgi:application"
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn finance.wsgi:application"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: finance.settings
