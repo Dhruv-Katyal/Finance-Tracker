@@ -1,0 +1,43 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}{% endblock title %}</title>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+
+    <body>
+    <div class="bg-gradient-to-br from-black via-gray-900 to-gray-700 min-h-screen">
+
+    <nav class=" flex items-center justify-left bg-blue-800">
+    {%if user.is_authenticated %}
+
+    <a href="{% url 'dashboard' %} " class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Dashboard</a>
+
+    <a href="{% url 'transaction' %}" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Add Transaction</a>
+
+    <a href="{% url 'show' %}" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Transactions</a>
+
+    <a href="{% url 'goal' %}" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Add Goal</a>
+
+    <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: inline;">
+
+        {% csrf_token %}
+
+        <a href="#"  onclick="document.getElementById('logout-form').submit();" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Logout</a>
+    </form>
+
+    {%else %}
+        <a href="{% url 'register' %}"> 
+        <div class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Register</div>
+        </a>
+        <a href="{% url 'login' %}"> 
+        <div class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Login</div>
+        </a>
+    {%endif %}
+        
+    </nav>
+        {% block content %}{% endblock content %}
+    </body>
+    </html>
