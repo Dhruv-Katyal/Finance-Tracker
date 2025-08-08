@@ -36,12 +36,12 @@
         <button type="submit" class="w-[100%] bg-blue-800 hover:bg-blue-900 text-white rounded-lg p-1 transition">Submit</button>
     </div>
 
-    
-    <a href="{% url 'login' %}"> 
-        <div class="w-[100%] bg-blue-800 hover:bg-blue-900 text-white rounded-lg p-1 mt-3 transition text-center">Login</div>
-    </a>
 </form>
-
+<div class="mt-4 font-large">
+<p class="text-sm text-orange-800 text-center mb-1">Already have an account
+        <a href="{% url 'login' %}" class="text-orange-600 hover:text-indigo-500 transition duration-150 ease-in-out"> Login </a>
+    </p>
+</div>
 </div>
 
 </div>

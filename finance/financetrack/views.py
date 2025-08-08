@@ -1,10 +1,12 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from financetrack.forms import TransactionForm,GaolForm
 from django.contrib.auth import login,logout
 from .models import Transaction,Goal
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
+from .admin import TransactionResource
+from django.contrib import messages
 # from .middlewares import auth,guest
 
 # Create your views here.
@@ -74,6 +76,7 @@ def TransactionCreateView(request):
             transaction = form.save(commit=False)
             transaction.user = request.user
             transaction.save()
+            messages.success(request,'Transaction Added Successfully!!!')
             return redirect('dashboard')
     else:
         form = TransactionForm()
@@ -92,7 +95,20 @@ def GoalView(request):
             goal = form.save(commit=False)
             goal.user = request.user
             goal.save()
+            messages.success(request,'Goal Added Successfully!!!')
             return redirect('dashboard')
     else:
         form = TransactionForm()
     return render(request, 'financetrack/goal.html', {'form': form})
+
+def export(request):
+    user_transactions = Transaction.objects.filter(user= request.user)
+
+    transaction_resoruce = TransactionResource()
+    dataset = transaction_resoruce.export(queryset=user_transactions)
+
+    excel_data = dataset.export('xlsx')
+
+    response = HttpResponse(excel_data, content_type= 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Deposition']= 'attachment;filename = transactions_report.xlsx'
+    return response

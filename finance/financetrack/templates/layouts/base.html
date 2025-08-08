@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{% endblock title %}</title>
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     </head>
 
     <body>
@@ -39,5 +40,24 @@
         
     </nav>
         {% block content %}{% endblock content %}
+        {%if messages %}
+        <div id="message-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 w-96 text-align:center">
+            {% for message in messages %}
+            <div class="bg-{{ message.tags }}-500 text-white p-3 rounded shadow-md mb-2 bg-green-700">Message:{{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script>
+        setTimeout(function() {
+            let messageContainer = document.getElementById ('message-container');
+            if (messageContainer) {
+                messageContainer.style.transition = l'opacity 0.5s ease-out";
+                messageContainer.style.opacity = "0";
+                setTimeout(() => messageContainer.remove(), 500);
+            }
+        } , 5000);
+    </script>
     </body>
     </html>
