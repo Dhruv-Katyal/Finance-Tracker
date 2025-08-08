@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'financetrack',
-    'import_export',
-    'rest_framework',
-    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [

@@ -5,7 +5,6 @@ from django.contrib.auth import login,logout
 from .models import Transaction,Goal
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
-from .admin import TransactionResource
 from django.contrib import messages
 # from .middlewares import auth,guest
 
@@ -100,15 +99,3 @@ def GoalView(request):
     else:
         form = TransactionForm()
     return render(request, 'financetrack/goal.html', {'form': form})
-
-def export(request):
-    user_transactions = Transaction.objects.filter(user= request.user)
-
-    transaction_resoruce = TransactionResource()
-    dataset = transaction_resoruce.export(queryset=user_transactions)
-
-    excel_data = dataset.export('xlsx')
-
-    response = HttpResponse(excel_data, content_type= 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Deposition']= 'attachment;filename = transactions_report.xlsx'
-    return response
