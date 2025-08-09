@@ -1,63 +1,101 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}{% endblock title %}</title>
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
 
-    <body>
-    <div class="bg-gradient-to-br from-black via-gray-900 to-gray-700 min-h-screen">
+<body class="bg-gradient-to-br from-black via-gray-900 to-gray-700 min-h-screen text-white">
+    
+    <!-- Navbar -->
+    <nav class="bg-blue-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Logo / Dashboard link -->
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="text-lg font-bold">Dashboard</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="text-lg font-bold">Finance App</a>
+                {% endif %}
 
-    <nav class=" flex items-center justify-left bg-blue-800">
-    {%if user.is_authenticated %}
+                <!-- Menu (Mobile collapsible) -->
+                <div class="hidden md:flex space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'transaction' %}" class="hover:bg-blue-600 px-3 py-2 rounded">Add Transaction</a>
+                        <a href="{% url 'show' %}" class="hover:bg-blue-600 px-3 py-2 rounded">Transactions</a>
+                        <a href="{% url 'goal' %}" class="hover:bg-blue-600 px-3 py-2 rounded">Add Goal</a>
+                         <form id="logout-form" action="{% url 'logout' %}" method="POST" class="flex items-center">
+            {% csrf_token %}
+            <button type="submit" class="hover:bg-blue-600 px-3 py-2 rounded">Logout</button>
+        </form>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="hover:bg-blue-600 px-3 py-2 rounded">Register</a>
+                        <a href="{% url 'login' %}" class="hover:bg-blue-600 px-3 py-2 rounded">Login</a>
+                    {% endif %}
+                </div>
 
-    <a href="{% url 'dashboard' %} " class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Dashboard</a>
-
-    <a href="{% url 'transaction' %}" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Add Transaction</a>
-
-    <a href="{% url 'show' %}" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Transactions</a>
-
-    <a href="{% url 'goal' %}" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Add Goal</a>
-
-    <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: inline;">
-
-        {% csrf_token %}
-
-        <a href="#"  onclick="document.getElementById('logout-form').submit();" class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Logout</a>
-    </form>
-
-    {%else %}
-        <a href="{% url 'register' %}"> 
-        <div class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Register</div>
-        </a>
-        <a href="{% url 'login' %}"> 
-        <div class="px-[1rem] mt-[0.5rem] mb-[0.5rem] text-white">Login</div>
-        </a>
-    {%endif %}
-        
-    </nav>
-        {% block content %}{% endblock content %}
-        {%if messages %}
-        <div id="message-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 w-96 text-align:center">
-            {% for message in messages %}
-            <div class="bg-{{ message.tags }}-500 text-white p-3 rounded shadow-md mb-2 bg-green-700">Message:{{ message }}
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
-            {% endfor %}
         </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden flex-col space-y-1 px-4 pb-4">
+            {% if user.is_authenticated %}
+                <a href="{% url 'transaction' %}" class="block hover:bg-blue-600 px-3 py-2 rounded">Add Transaction</a>
+                <a href="{% url 'show' %}" class="block hover:bg-blue-600 px-3 py-2 rounded">Transactions</a>
+                <a href="{% url 'goal' %}" class="block hover:bg-blue-600 px-3 py-2 rounded">Add Goal</a>
+                <form id="logout-form-mobile" action="{% url 'logout' %}" method="POST" class="inline">
+                    {% csrf_token %}
+                    <a href="#" onclick="document.getElementById('logout-form-mobile').submit();" 
+                       class="block hover:bg-blue-600 px-3 py-2 rounded">Logout</a>
+                </form>
+            {% else %}
+                <a href="{% url 'register' %}" class="block hover:bg-blue-600 px-3 py-2 rounded">Register</a>
+                <a href="{% url 'login' %}" class="block hover:bg-blue-600 px-3 py-2 rounded">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="p-4">
+        {% block content %}{% endblock content %}
+    </main>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div id="message-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 w-11/12 sm:w-96 text-center">
+        {% for message in messages %}
+            <div class="bg-{{ message.tags }}-500 text-white p-3 rounded shadow-md mb-2">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
     {% endif %}
 
     <script>
+        // Mobile menu toggle
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Auto-hide messages
         setTimeout(function() {
-            let messageContainer = document.getElementById ('message-container');
+            let messageContainer = document.getElementById('message-container');
             if (messageContainer) {
-                messageContainer.style.transition = l'opacity 0.5s ease-out";
+                messageContainer.style.transition = "opacity 0.5s ease-out";
                 messageContainer.style.opacity = "0";
                 setTimeout(() => messageContainer.remove(), 500);
             }
-        } , 5000);
+        }, 5000);
     </script>
-    </body>
-    </html>
+</body>
+</html>
