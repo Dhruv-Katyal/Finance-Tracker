@@ -6,7 +6,5 @@ from .models import Transaction,Goal
 # Super User -
 # Name-  Dhruv
 # Password- katyal1234
-
-
 admin.site.register(Transaction)
 admin.site.register(Goal)

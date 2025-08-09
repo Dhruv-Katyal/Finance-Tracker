@@ -1,33 +1,52 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Transaction History{% endblock title %}
+{% block title %}Transaction History{% endblock title %}
 
 {% block content %}
-    <h1 class="text-orange-500 text-center text-[3rem] m-10 font-semibold">Transactions List</h1>
-    <table class="min-w-full table-auto  border-collapse border border-blue-200">
-        <thead>
-            <tr class="bg-white">
-                <th class="px-4 py-2 border border-blue-200">Date</th>
-                <th class="px-4 py-2 border border-blue-200">Title</th>
-                <th class="px-4 py-2 border border-blue-200">Amount</th>
-                <th class="px-4 py-2 border border-blue-200">Type</th>
-            </tr>
-        </thead>
-    <tbody class="text-white">
-        {% for transaction in transactions%}
-            <tr class="hover:bg-red-800">
-                <td class="px-4 py-2 border border-gray-300">{{transaction.date}}</td>
-                <td class="px-4 py-2 border border-gray-300">{{transaction.title}}</td>
-                <td class="px-4 py-2 border border-gray-300">{{transaction.amount | floatformat:2}}
-                <td class="px-4 py-2 border border-gray-300">
-                    {% if transaction.transaction_type == "Income" %}
-                        Credit
-                    {% else %}
-                        Debit
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% endblock content%}
+<div class="max-w-5xl mx-auto mt-10">
+    <h1 class="text-orange-500 text-center text-[3rem] font-semibold mb-8">
+        Transactions List
+    </h1>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse border border-blue-200 shadow-lg rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-gray-900 text-white">
+                    <th class="px-4 py-3 border border-blue-200">Date</th>
+                    <th class="px-4 py-3 border border-blue-200">Title</th>
+                    <th class="px-4 py-3 border border-blue-200">Amount</th>
+                    <th class="px-4 py-3 border border-blue-200">Type</th>
+                </tr>
+            </thead>
+            <tbody class="bg-gray-800 text-gray-100">
+                {% for transaction in transactions %}
+                    <tr class="hover:bg-gray-700 transition">
+                        <td class="px-4 py-3 border border-gray-300">
+                            {{ transaction.date|date:"M d, Y" }}
+                        </td>
+                        <td class="px-4 py-3 border border-gray-300">
+                            {{ transaction.title }}
+                        </td>
+                        <td class="px-4 py-3 border border-gray-300">
+                            {{ transaction.amount|floatformat:2 }}
+                        </td>
+                        <td class="px-4 py-3 border border-gray-300">
+                            {% if transaction.transaction_type == "Income" %}
+                                <span class="text-green-400 font-semibold">Credit</span>
+                            {% else %}
+                                <span class="text-red-400 font-semibold">Debit</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-3 text-center text-gray-400">
+                            No transactions found.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

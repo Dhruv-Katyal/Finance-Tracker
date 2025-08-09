@@ -2,55 +2,83 @@
 {% block title %}Login{% endblock title %}
 {% block content %}
 
-<div class="flex items-center justify-center min-h-screen">
-    <div class="max-w-md w-full space-y-8 bg-gray-800 p-6 rounded-xl shadow-lg">
-        <div>
-            <h2 class="text-gray-300 font-bold text-[3rem] text-center"> Finance Tracker</h2>
-            <p class="text-gray-200 text-xl text-center">Please sign-in to your account</p>
-        </div>
+<div class="flex items-center justify-center min-h-screen px-4">
+    <div class="w-full max-w-sm sm:max-w-md bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg space-y-6">
         
-{% if form.non_field_errors %}
-    <small class="text-red-700 text-sm mt-1">
-        {{form.non_field_errors.as_ul}}
-    </small>
-{% endif %}
+        <!-- Header -->
+        <div>
+            <h2 class="text-gray-300 font-bold text-2xl sm:text-3xl text-center">Finance Tracker</h2>
+            <p class="text-gray-200 text-base sm:text-xl text-center mt-1">Please sign in to your account</p>
+        </div>
 
-<form method="POST" action="{% url 'login' %}">
-    {% csrf_token _token %}
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+            <small class="text-red-500 text-sm block">
+                {{ form.non_field_errors.as_ul }}
+            </small>
+        {% endif %}
 
-    <div class="text-white">
-        <label for="{{form.username.id_for_label}}",class="mb-2">Username:</label>
-        <input type="text", name="{{form.username.name}}", placeholder="Enter Your Username" required class="w-full border rounded-lg p-2 mt-2 mb-2", value="{{form.username.value}}"/>
-        <span class="text-red-700 text-sm mt-1">{{form.username.errors}}</span>
+        <!-- Form -->
+        <form method="POST" action="{% url 'login' %}" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-white mb-1">Username:</label>
+                <input type="text" 
+                       name="{{ form.username.name }}" 
+                       id="{{ form.username.id_for_label }}"
+                       placeholder="Enter Your Username" 
+                       required 
+                       value="{{ form.username.value }}"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                <span class="text-red-500 text-sm">{{ form.username.errors }}</span>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="{{ form.email.id_for_label }}" class="block text-white mb-1">Email:</label>
+                <input type="email" 
+                       name="{{ form.email.name }}" 
+                       id="{{ form.email.id_for_label }}"
+                       placeholder="Enter Your Email" 
+                       required 
+                       value="{{ form.email.value }}"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                <span class="text-red-500 text-sm">{{ form.email.errors }}</span>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="{{ form.password.id_for_label }}" class="block text-white mb-1">Password:</label>
+                <input type="password" 
+                       name="{{ form.password.name }}" 
+                       id="{{ form.password.id_for_label }}"
+                       placeholder="Enter Your Password" 
+                       required 
+                       value="{{ form.password.value }}"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                <span class="text-red-500 text-sm">{{ form.password.errors }}</span>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" 
+                    class="w-full bg-blue-800 hover:bg-blue-900 text-white rounded-lg py-2 transition">
+                Login
+            </button>
+        </form>
+
+        <!-- Links -->
+        <div class="text-center space-y-2">
+            <p class="text-sm text-gray-200">
+                Don't have an account?
+                <a href="{% url 'register' %}" class="font-medium text-orange-400 hover:text-indigo-400 transition">Register here</a>
+            </p>
+            <p class="text-sm text-gray-400">
+                <a href="{% url 'password_reset' %}" class="font-medium text-orange-400 hover:text-indigo-400 transition">Forgot password?</a>
+            </p>
+        </div>
     </div>
-
-    <div class="text-white">
-        <label for="{{form.email.id_for_label}}", class="mb-2">Email:</label>
-        <input type="email", name="{{form.email.name}}", placeholder="Enter Your Email" required class="w-full border rounded-lg p-2 mt-2 mb-2", value="{{form.email.value}}"/>
-        <span class="text-red-700 text-sm mt-1">{{form.email.errors}}</span>
-    </div>
-
-     <div class="text-white">
-        <label for="{{form.password.id_for_label}}",class="mb-2">Password:</label>
-        <input type="password", name="{{form.password.name}}", placeholder="Enter Your Password" required class="w-full border rounded-lg p-2 mt-2 mb-2",, value="{{form.password.value}}"/>
-        <span class="text-red-700 text-sm mt-1">{{form.password.errors}}</span>
-    </div>
-
-    <button type="submit" class="w-[100%] bg-blue-800 hover:bg-blue-900 text-white rounded-lg p-1 mt-2 transition">Login</button>
-
-</form>
-<div lass="text-center space-y-2">
-    <p class="text-sm text-orange-800 text-center mb-1">Don't have an account?
-        <a href="{% url 'register' %}" class="font-medium text-orange-600 hover:text-indigo-500 transition duration-150 ease-in-out"> Register here </a>
-    </p>
-    
-    <p class="text-sm text-gray-500 text-center">
-        <a href="{% url 'password_reset' %}" class="font-medium text-orange-600 hover:text-indigo-500 transition duration-150 ease-in-out">Forgot password?</a>
-    </p>
-
-</div>
-</div>
 </div>
 
-
-{% endblock content%}
+{% endblock content %}
